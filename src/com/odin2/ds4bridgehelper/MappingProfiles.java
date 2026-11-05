@@ -18,6 +18,7 @@ final class MappingProfiles {
     static final Profile[] SUPPORTED={
         new Profile("odin2-modern","Odin 2 (modern)","com.odin2.touchmapping","com.ro.mapping.service.ApiService",MODERN,null,34,35),
         new Profile("odin2-legacy","Odin 2 (legacy)","com.odin2.touchmapping","com.odin2.touchmapping.service.ApiService",OLD,null,33,34),
+        new Profile("odin3-20260429","Odin 3 (April 2026)","com.odin.mapping","com.ro.mapping.service.ApiService",MODERN,"3.0(20260429_153600)",37,38),
         new Profile("odin3-20251128","Odin 3","com.odin.mapping","com.ro.mapping.service.ApiService",MODERN,"3.0(20251128_112846)",34,35)
     };
     // Server-side blacklist methods confirmed offline; no exclusion writes enabled yet.

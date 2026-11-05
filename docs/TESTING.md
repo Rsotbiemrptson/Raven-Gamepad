@@ -1,3 +1,13 @@
+# Testing
+
+## 0.16.4 hardware acceptance - 2026-11-05
+
+The same signed preview APK passed Remote Play gameplay and automatic startup after reboot/first unlock on Odin 2 / Android 13 / Touch Mapping 2.0(20240724_155618), and Odin 3 / Android 15 / Touch Mapping 3.0(20260429_153600). The user tested face buttons, D-pad, both sticks, shoulders and triggers. Native startup and the virtual Sony controller were observed after unlocking without opening the app. The user confirmed controls worked afterward on both devices.
+
+Host checks verify exact versions, descriptors and command tables. Final payload is compared with the accepted preview. Quick Settings stock-mode switching remains Odin 2 only. Retroid is diagnostic-only and untested; touchpad support is not included.
+
+## Historical validation
+
 # Validation
 
 ## 0.16.3 rename and controller-style tile - 2026-10-30
@@ -14,13 +24,13 @@ The preview builds passed Odin 2 mapping learning and exclusive assignment, sect
 
 The final build is compared with 0.16.2-test2 outside version metadata/signature, and independently rebuilt through the portable public build. Native/runtime assets remain unchanged from 0.16.1. No fresh in-game/reboot acceptance is claimed for this UI-only update. Touchpad support is not included; Odin 3 and Retroid still require hardware testing.
 
-## 0.16.1 icon correction â€” 2026-10-26
+## 0.16.1 icon correction — 2026-10-26
 
 The approved flattened PNG replaces the original shaded backdrop and black corners with Backup's exact solid #1F2228 background and rounded-corner alpha. Pixel checks preserved the original raven/controller/arrow artwork and verified the APK-packed visible pixels and alpha. The icon-only preview installed over the official 0.16.0 APK, preserving the running bridge process.
 
 This patch changes the icon and build/version metadata only. Final-to-preview payload and public-layout rebuild comparisons are required for publication. No additional gameplay, reboot or new-model acceptance is claimed beyond the working 0.16.0 milestone below.
 
-## 0.16.0 milestone â€” 2026-10-25
+## 0.16.0 milestone — 2026-10-25
 
 The tested 0.16.0-test1 preview ran on the owner's Odin 2. The final 0.16.0 APK changes version metadata only; every payload entry outside the manifest/signature matched the accepted preview. The source was then organized into the public flat layout and rebuilt separately.
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.16.4 - 2026-11-05
+
+- Support April 2026 Odin 3 Touch Mapping with its verified command table.
+- Allow bridge startup on Odin 3 / Android 15, retaining Odin 2 / Android 13.
+- Add a root-only read-only settings fallback for firmware without the content command.
+- Confirm Remote Play controls and automatic startup after reboot on Odin 2 and Odin 3.
+- Use Install/Update Components after updating. Quick Settings stock-mode switching remains Odin 2 only. Retroid stays diagnostic-only. Touchpad work is not included.
+
+
 ## 0.16.3 - 2026-10-30
 
 - Rename the virtual Sony controller from Odin DS4 Bridge Test to Raven Gamepad, retaining Sony VID/PID and existing app/package identity.

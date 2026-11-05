@@ -9,8 +9,12 @@ public final class MappingProfilesTest {
         check(old!=null&&old.listCode==33&&old.changeCode==34,"Odin2 legacy codes");old.verify("318",MappingProfiles.OLD);
         MappingProfiles.Profile modern=MappingProfiles.byComponent("com.odin2.touchmapping","com.ro.mapping.service.ApiService");
         check(modern!=null&&modern.listCode==34&&modern.changeCode==35,"Odin2 modern codes");modern.verify("387",MappingProfiles.MODERN);
-        MappingProfiles.Profile odin3=MappingProfiles.byComponent("com.odin.mapping","com.ro.mapping.service.ApiService");
+        MappingProfiles.Profile odin3=MappingProfiles.byId("odin3-20251128");
         check(odin3!=null&&odin3.listCode==34&&odin3.changeCode==35,"Odin3 codes");odin3.verify("3.0(20251128_112846)",MappingProfiles.MODERN);
+        MappingProfiles.Profile newer=MappingProfiles.byId("odin3-20260429");
+        check(newer.listCode==37&&newer.changeCode==38,"New Odin3 codes must not use old transactions");
+        newer.verify("3.0(20260429_153600)",MappingProfiles.MODERN);
+        rejects(()->newer.verify("3.0(20251128_112846)",MappingProfiles.MODERN));
         rejects(()->odin3.verify("3.0(unknown)",MappingProfiles.MODERN));
         rejects(()->odin3.verify("3.0(20251128_112846)",MappingProfiles.OLD));
         rejects(()->old.verify("318",MappingProfiles.MODERN));

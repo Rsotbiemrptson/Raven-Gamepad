@@ -1,22 +1,11 @@
 # Release status
 
-Current final milestone: **Raven Gamepad 0.16.3**, version code **39**, dated 2026-10-30.
-Previously DS4 Bridge; package/signing identity unchanged. Virtual controller now named Raven Gamepad; Sony IDs unchanged.
+Current final: **Raven Gamepad 0.16.4**, version code **42**, dated 2026-11-05.
 
-All four Quick Settings modes passed live checks and user testing: Odin/Xbox retain per-app forwarding, Raven forwards globally, Disconnected pauses without stopping the runtime. Component revision 17 migrates the name/exclusion and supports selected/all/off forwarding. Existing published installations need Install/Update Components once.
+Odin 2 / Android 13 / Touch Mapping 2.0(20240724_155618) and Odin 3 / Android 15 / Touch Mapping 3.0(20260429_153600) passed Remote Play gameplay and automatic startup after reboot/first unlock. The user confirmed controls before and after reboot on both. Final uses the accepted preview payload with release version metadata.
 
-Automatic startup after reboot/first unlock was observed without opening the app, retaining Odin/per-app mode; the user confirmed all Remote Play controls worked afterward. Reboot was tested from Odin/per-app mode. Final/source rebuild and preview-payload checks accompany publication. Touchpad support remains deferred.
+Install the APK over the official app, then use **Install/Update Components** and Start. Saved selections, mappings, appearance and startup preferences remain. No firmware flash or factory reset is needed.
 
-| Area | Status |
-| --- | --- |
-| Odin 2 installation/runtime, app selection and mapping | Hardware-tested in this project |
-| Latest UI, both orientations/themes, persistent pane navigation | Passed |
-| Mapping input forwarding, accented Cancel, unsaved guard and draft recreation | Passed |
-| Color presets/RGB/hex, Apply/Cancel/Default | Passed |
-| Remote Play full controls before and after reboot | User-confirmed |
-| Automatic startup after first unlock, without opening the app | Observed |
-| Odin 3 | Adapter inspected; hardware testing still needed |
-| Retroid Pocket 6 | Read-only diagnostics only; bridging disabled; hardware testing needed |
-| Battery consumption / accessibility-based watcher | Not measured / not implemented |
+Quick Settings stock-style switching remains Odin 2/API33 only. Older Odin 3 mapping 3.0(20251128_112846) is inspected but not hardware-tested. Unknown versions are blocked. Retroid Pocket 6 is read-only diagnostics; bridging is disabled and untested. Battery impact is not measured. Touchpad experiment is retained separately for later and is not included.
 
-No device logs, serials, account credentials, OEM APKs or firmware are included in this repository.
+Package/signing identity and Sony controller IDs are unchanged. No private keys, device serials/logs or OEM binaries are published.

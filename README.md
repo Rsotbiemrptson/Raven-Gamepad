@@ -6,7 +6,7 @@
 
 Virtual DualShock 4 controls for your handheld, with app selection, controller mapping and diagnostics in one APK.
 
-**Current release: 0.16.3** · Package: `com.odin2.ds4bridgehelper` · Version code: `39` · License: **GPL-3.0-only**
+**Current release: 0.16.4** · Package: `com.odin2.ds4bridgehelper` · Version code: `42` · License: **GPL-3.0-only**
 
 Previously named DS4 Bridge; the package and signing identity remain unchanged, so the official APK can update an existing installation.
 
@@ -24,13 +24,13 @@ Previously named DS4 Bridge; the package and signing identity remain unchanged, 
 
 ## Device support
 
-**Odin 2 is hardware-tested. Odin 3 and Retroid still require hardware testing.**
+**Odin 2 and Odin 3 are hardware-tested. Retroid support remains diagnostic-only and untested.**
 
 The standalone bridge was tested on Odin 2 stock 1.0.0.318 / Android 13 and a stock-318-based custom build. Odin 2 tests confirmed Remote Play buttons, D-pad, both sticks and triggers worked in-game before and after reboot; automatic bridge startup after first unlock was observed without opening Raven Gamepad.
 
-Known Odin 2 and inspected Odin 3 Touch Mapping interfaces are detected automatically. The Odin 3 adapter is not hardware-validated. The inspected Retroid Pocket 6 integration has read-only diagnostics only: component setup, bridge startup and exclusion changes remain disabled. Unknown mapping versions are reported rather than sent guessed commands. See [Compatibility](docs/USAGE.md#compatibility).
+Known Odin 2 and inspected Odin 3 Touch Mapping interfaces are detected automatically. Odin 3 / Android 15 with Touch Mapping `3.0(20260429_153600)` passed Remote Play gameplay and automatic startup after reboot/first unlock. The older inspected Odin 3 mapping version remains untested on hardware. The inspected Retroid Pocket 6 integration has read-only diagnostics only: component setup, bridge startup and exclusion changes remain disabled. Unknown mapping versions are reported rather than sent guessed commands. See [Compatibility](docs/USAGE.md#compatibility).
 
-This is **not an ordinary unprivileged APK**. On the tested Odin 2, AYN's `PServerBinder` service provides permitted root execution, Linux input access and `/dev/uinput`; no Magisk installation or firmware flash was required. A similarly named Run as root option or the same processor on another device does not establish compatibility. Android API 26 is the declared minimum, not a claim that every Android 8+ device works.
+This is **not an ordinary unprivileged APK**. On the tested Odin 2 and Odin 3, AYN's `PServerBinder` service provides permitted root execution, Linux input access and `/dev/uinput`; no Magisk installation or firmware flash was required. A similarly named Run as root option or the same processor on another device does not establish compatibility. Android API 26 is the declared minimum, not a claim that every Android 8+ device works.
 
 The bridge does not change firmware, device fingerprints or Play Integrity, and it cannot guarantee that another app accepts a virtual controller. It is not affiliated with AYN, Sony or PlayStation.
 
@@ -38,7 +38,7 @@ The bridge does not change firmware, device fingerprints or Play Integrity, and 
 
 - [Install and update](docs/INSTALL.md)
 - [Usage, mapping, appearance and troubleshooting](docs/USAGE.md)
-- [Complete removal](docs/UNINSTALL.md) â€” remove bridge components **before** uninstalling the APK.
+- [Complete removal](docs/UNINSTALL.md) — remove bridge components **before** uninstalling the APK.
 - [Testing and hardware limits](docs/TESTING.md)
 
 Automatic startup waits for the first unlock after reboot. App selection gates input forwarding; the virtual controller stays registered while the bridge is running. Battery impact has not been quantified.
@@ -52,10 +52,10 @@ The app uses Java and Android framework APIs plus a small native C bridge, witho
 - `runtime/`: privileged launcher, supervisor and stop scripts.
 - `build.ps1`: portable signed-APK build; `scripts/`: final-APK publishing helper.
 - `tests/`: host checks, native tests and Android instrumentation source.
-- `releases/v0.16.3/`: current signed APK and SHA-256 checksum.
+- `releases/v0.16.4/`: current signed APK and SHA-256 checksum.
 - `docs/`: install, removal, usage, build, architecture and validation notes.
 
-See [Architecture](docs/ARCHITECTURE.md) and [Release status](RELEASE-STATUS.md). Source corresponding to the official APK is available at the `v0.16.3` tag.
+See [Architecture](docs/ARCHITECTURE.md) and [Release status](RELEASE-STATUS.md). Source corresponding to the official APK is available at the `v0.16.4` tag.
 
 ## License and contributions
 

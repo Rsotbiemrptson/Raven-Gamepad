@@ -4,8 +4,10 @@ exec >>"$STATE/start.log" 2>&1
 [ "$(id -u)" = 0 ] || exit 1
 [ "$(cat "$STATE/ready" 2>/dev/null)" = 17 ] || { echo 'STOP: complete app setup required'; exit 1; }
 model="$(getprop ro.product.vendor.model)"
-case "$model" in Odin2|"Odin 2") ;; *) echo 'STOP: diagnostics only for this model'; exit 1 ;; esac
-[ "$(getprop ro.build.version.sdk)" = 33 ] || { echo 'STOP: Odin 2 Android 13 required'; exit 1; }
+case "$model:$(getprop ro.build.version.sdk)" in
+    Odin2:33|"Odin 2:33"|Odin3:35) ;;
+    *) echo 'STOP: unverified model/Android version'; exit 1 ;;
+esac
 [ ! -x /system_ext/bin/odin_ds4_bridge ] || { echo 'STOP: firmware bridge already installed'; exit 1; }
 [ -c /dev/uinput ] || { echo 'STOP: uinput unavailable'; exit 1; }
 if [ -f "$STATE/supervisor.pid" ]; then

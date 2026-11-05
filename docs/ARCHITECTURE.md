@@ -12,7 +12,7 @@ service's command handling is constrained. Unknown Binder services are listed
 by diagnostics, not invoked in an automatic search for root access.
 
 MappingProfiles keeps component-specific command layouts: Odin 2 legacy uses
-33/34, modern Odin 2 and the pinned Odin 3 mapping version use 34/35. Retroid's
+33/34, modern Odin 2 and the older pinned Odin 3 mapping version use 34/35. Odin 3 Touch Mapping 3.0(20260429_153600) uses 37/38. Retroid's
 inspected RP6 version has the same modern descriptor but uses 37/38 for its
 blacklist API. Only its read-only 37 query is enabled in explicit diagnostics;
 Retroid mutations/setup/start are disabled. Candidates must be enabled/exported

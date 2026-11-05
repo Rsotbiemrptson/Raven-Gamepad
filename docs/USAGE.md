@@ -42,7 +42,7 @@ Diagnostics shows the selected physical controller and live inputs. Technical de
 ## Compatibility
 
 - **Odin 2:** stock 318/Android 13 and a stock-318-based custom build have hardware testing. Odin/Xbox modes are supported by the existing mapping logic; the latest UI/reboot acceptance ran on the connected Odin 2.
-- **Odin 3:** the inspected `com.odin.mapping` version `3.0(20251128_112846)` has an adapter; hardware validation is still required.
+- **Odin 3:** Android 15 with `com.odin.mapping` version `3.0(20260429_153600)` passed gameplay and automatic startup after reboot. The older inspected `3.0(20251128_112846)` adapter remains available but is not hardware-tested. Unknown versions are blocked. Quick Settings stock-mode switching remains Odin 2 only.
 - **Retroid Pocket 6:** inspected `com.rp.mapping` version `3.0(20260615_164638)` has a pinned read-only diagnostic path. Bridging, setup and exclusion writes remain disabled pending hardware testing.
 - Other models, firmware variants and unknown interfaces are not claimed supported. The same CPU, service name or Run as root option is not sufficient evidence.
 
