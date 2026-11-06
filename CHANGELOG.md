@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.16.7 - 2026-11-06
+
+- Match the shared Raven About layout, including the adaptive width and centered 72 dp icon.
+- Keep the About dialog stationary when swiped.
+
+
 ## 0.16.6 - 2026-11-06
 
 - Refresh the APK path while the bridge runs so Odin 3 can resume forwarding after an APK update.
