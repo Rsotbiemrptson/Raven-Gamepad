@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.16.5 - 2026-11-06
+
+- Save app forwarding changes as soon as you flip a switch. Use Enabled to review and disable selected apps.
+- Move System apps beside search and style switches with the selected accent color.
+- Add Report an issue to the overflow menu.
+- Compact the landscape About dialog and hide its scrollbar.
+
+
 ## 0.16.4 - 2026-11-05
 
 - Support April 2026 Odin 3 Touch Mapping with its verified command table.

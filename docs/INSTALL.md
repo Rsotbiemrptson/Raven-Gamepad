@@ -2,12 +2,12 @@
 
 ## Fresh installation on a supported Odin 2 or Odin 3
 
-1. Download the official `Raven-Gamepad-0.16.4.apk` from [Releases](https://github.com/Rsotbiemrptson/Raven-Gamepad/releases/tag/v0.16.4).
+1. Download the official `Raven-Gamepad-0.16.5.apk` from [Releases](https://github.com/Rsotbiemrptson/Raven-Gamepad/releases/tag/v0.16.5).
 2. Open the APK and allow installation from that source when Android asks.
 3. Open Raven Gamepad. Use the top-right three-dot menu to open **Settings**.
 4. Select **Bridge controls**, expand **Advanced**, then tap **Install/Update Components**. Wait for the installation to finish.
 5. Tap **Start** and wait for **Status: Running**.
-6. Select **Apps**, check PS Remote Play or your other installed target apps, and tap **Save selected apps**. Search accepts names or package IDs. **Show system apps** is in the three-dot menu. Remote Play is not preselected or shown if it is absent.
+6. In **Apps**, switch on PS Remote Play or your other installed target apps. Changes save immediately. Search by app name or package ID, or use **System apps** next to search. Open **Enabled** to review or switch off selected apps. PS Remote Play appears when installed.
 7. Fully close and reopen the target app, connect to your console if needed, and test all buttons, both sticks, D-pad and triggers in a game.
 8. Optional: under **Settings > Bridge controls**, enable **Start bridge after reboot**. Reboot, unlock once, and test without first opening Raven Gamepad.
 

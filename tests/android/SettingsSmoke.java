@@ -55,7 +55,8 @@ public final class SettingsSmoke extends Instrumentation {
         check(menu.findAccessibilityNodeInfosByText("Start bridge after reboot").isEmpty(),"Startup remains in main menu");
         check(!menu.findAccessibilityNodeInfosByText("About").isEmpty(),"About menu option missing");
         check(!menu.findAccessibilityNodeInfosByText("Settings").isEmpty(),"Settings menu option missing");
-        check(!menu.findAccessibilityNodeInfosByText("Show system apps").isEmpty(),"System apps menu option missing");
+        check(!menu.findAccessibilityNodeInfosByText("Report an issue").isEmpty(),"Issue reporting menu option missing");
+        check(menu.findAccessibilityNodeInfosByText("Show system apps").isEmpty(),"System apps remains in menu");
         for(String removed:new String[]{"Controller mapping","Diagnostics","Theme","Bridge controls"})check(menu.findAccessibilityNodeInfosByText(removed).isEmpty(),"Extra overflow option: "+removed);
         open(BridgeActivity.class);BridgeActivity bridge=(BridgeActivity)screen;waitIdle(bridge);
         main(()->check(find(screen.getWindow().getDecorView(),"Start bridge after reboot")!=null,"Startup setting missing"));

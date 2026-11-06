@@ -22,6 +22,16 @@ final class RavenShell {
         for(int i=0;i<names.length;i++){
             final Class<?> target=screens[i];Button tab=ui.button(names[i],false);tab.setTag(target);tab.setContentDescription("Navigate: "+names[i]);tab.setPadding(ui.dp(6),ui.dp(8),ui.dp(6),ui.dp(8));tab.setTextSize(wide?14:13);tab.setOnClickListener(v->navigate.open(target));
             LinearLayout.LayoutParams params=wide?new LinearLayout.LayoutParams(-1,ui.dp(48)):new LinearLayout.LayoutParams(0,ui.dp(48),1);params.setMargins(wide?0:ui.dp(3),0,wide?0:ui.dp(3),wide?ui.dp(8):0);nav.addView(tab,params);
+            if (target == PickerActivity.class && activity instanceof PickerActivity) {
+                PickerActivity picker = (PickerActivity) activity;
+                Button enabled = ui.button("Enabled", false);
+                enabled.setTag("enabled-apps");
+                enabled.setContentDescription("Navigate: Enabled");
+                enabled.setPadding(ui.dp(6), ui.dp(8), ui.dp(6), ui.dp(8));
+                enabled.setTextSize(wide ? 14 : 13);
+                enabled.setOnClickListener(v -> picker.openApps(true));
+                nav.addView(enabled, new LinearLayout.LayoutParams(params));
+            }
         }
         if(wide){root.addView(nav,new LinearLayout.LayoutParams(ui.dp(148),-1));root.addView(page,new LinearLayout.LayoutParams(0,-1,1));}
         else{root.addView(page,new LinearLayout.LayoutParams(-1,0,1));root.addView(nav,new LinearLayout.LayoutParams(-1,ui.dp(70)));}
@@ -29,7 +39,21 @@ final class RavenShell {
     }
     static void select(View root,SettingsUi ui,Class<?> target){
         ViewGroup nav=(ViewGroup)root.findViewWithTag("raven-navigation");boolean settings=target!=PickerActivity.class;
-        for(int i=0;i<nav.getChildCount();i++)if(nav.getChildAt(i) instanceof Button){Button tab=(Button)nav.getChildAt(i);Class<?> type=(Class<?>)tab.getTag();boolean active=type==target;tab.setVisibility(type==PickerActivity.class||settings?View.VISIBLE:View.GONE);tab.setSelected(active);tab.setBackground(ui.shape(active?ui.accent:ui.panel,24));tab.setTextColor(active?AppearanceColors.ink(ui.accent):ui.foreground);}
+        boolean enabledOnly = ui.activity instanceof PickerActivity
+                && ((PickerActivity) ui.activity).isEnabledOnly();
+        for (int i = 0; i < nav.getChildCount(); i++) {
+            if (!(nav.getChildAt(i) instanceof Button)) continue;
+            Button tab = (Button) nav.getChildAt(i);
+            Object type = tab.getTag();
+            boolean enabledTab = "enabled-apps".equals(type);
+            boolean active = enabledTab ? !settings && enabledOnly
+                    : type == target && (settings || !enabledOnly);
+            tab.setVisibility(type == PickerActivity.class || (enabledTab ? !settings : settings)
+                    ? View.VISIBLE : View.GONE);
+            tab.setSelected(active);
+            tab.setBackground(ui.shape(active ? ui.accent : ui.panel, 24));
+            tab.setTextColor(active ? AppearanceColors.ink(ui.accent) : ui.foreground);
+        }
     }
     private RavenShell(){}
 }

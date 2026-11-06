@@ -44,9 +44,24 @@ public class BridgeScreen extends Activity {
         for(int i=0;i<group.getChildCount();i++){View child=group.getChildAt(i);if(child instanceof TextView&&!(child instanceof Button)){String title=((TextView)child).getText().toString();if(title.equals("Appearance")||title.equals("Bridge controls")||title.equals("Controller mapping")||title.equals("Diagnostics")){group.removeViewAt(i);return true;}}if(removePaneHeading(child))return true;}return false;
     }
     private void showOptions(View anchor){
-        PopupMenu popup=new PopupMenu(this,anchor);android.content.SharedPreferences prefs=getSharedPreferences("PickerActivity",0);
-        popup.getMenu().add(0,1,0,"Show system apps").setCheckable(true).setChecked(prefs.getBoolean("show_system",false));popup.getMenu().add(0,2,1,"Settings");popup.getMenu().add(0,3,2,"About");
-        popup.setOnMenuItemClickListener(item->{if(item.getItemId()==1)prefs.edit().putBoolean("show_system",!prefs.getBoolean("show_system",false)).apply();else if(item.getItemId()==3)AboutDialog.show(this);else if(!(this instanceof AppearanceActivity))navigateAway(()->{startActivity(new Intent(this,AppearanceActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP));finish();});return true;});popup.show();
+        PopupMenu popup = new PopupMenu(this, anchor);
+        popup.getMenu().add("Settings").setOnMenuItemClickListener(item -> {
+            if (!(this instanceof AppearanceActivity)) navigateAway(() -> {
+                startActivity(new Intent(this, AppearanceActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP));
+                finish();
+            });
+            return true;
+        });
+        popup.getMenu().add("About").setOnMenuItemClickListener(item -> {
+            AboutDialog.show(this);
+            return true;
+        });
+        popup.getMenu().add("Report an issue").setOnMenuItemClickListener(item -> {
+            IssueReport.open(this, ui);
+            return true;
+        });
+        popup.show();
     }
     protected void navigateAway(Runnable action){action.run();}
     @Override public void recreate(){if(getParent() instanceof PickerActivity)getParent().recreate();else super.recreate();}

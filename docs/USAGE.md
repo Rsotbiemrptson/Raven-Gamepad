@@ -2,9 +2,9 @@
 
 ## Apps and navigation
 
-Only installed apps are listed, with their icon, name and package ID. Check the apps that should receive controller input, then **Save selected apps**. The three-dot menu contains **Show system apps**, **Settings**, **About**, in that order.
+The **Apps** list shows installed apps with their icon, name and package ID. Switch an app on to forward controller input to it. Changes save immediately. Use **System apps** beside search to include system apps. **Enabled** shows selected apps, including selected system apps. The three-dot menu contains **Settings**, **About**, and **Report an issue**.
 
-Apps is the only main tab. Settings reveals Appearance, Bridge controls, Controller mapping and Diagnostics beneath it in landscape (bottom tabs in portrait). Apps stays available and hides the settings tabs when selected. The same sidebar/header stay attached while only the right pane changes.
+Apps and Enabled are the main tabs. Settings reveals Appearance, Bridge controls, Controller mapping and Diagnostics beneath it in landscape (bottom tabs in portrait). Apps stays available and hides the settings tabs when selected. The same sidebar/header stay attached while only the right pane changes.
 
 ## Appearance
 

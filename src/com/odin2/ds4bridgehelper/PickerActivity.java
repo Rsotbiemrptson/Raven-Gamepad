@@ -23,11 +23,12 @@ public class PickerActivity extends ActivityGroup {
     private BaseAdapter adapter;
     private TextView status;
     private EditText search;
+    private Switch systemApps;
+    private boolean enabledOnly;
     private int foreground, secondary, background, accent;
     private int appliedTheme;
     private SettingsUi ui;
     private ListView list;
-    private Button saveButton;
     private PopupMenu optionsPopup;
     private FrameLayout pane;
     private View appsPage,shellRoot;
@@ -59,9 +60,8 @@ public class PickerActivity extends ActivityGroup {
         getWindow().getDecorView().setSystemUiVisibility(dark ? 0 :
                 View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
         pm = getPackageManager();
-        ArrayList<String> pending = state == null ? null : state.getStringArrayList("selected");
-        if (pending == null) selected.addAll(readTargets());
-        else selected.addAll(pending);
+        selected.addAll(readTargets());
+        enabledOnly = state != null && state.getBoolean("enabled_only");
         buildScreen();
         loadChoices();
         if (state != null) search.setText(state.getString("query", ""));
@@ -71,7 +71,7 @@ public class PickerActivity extends ActivityGroup {
     }
 
     @Override protected void onSaveInstanceState(Bundle outState) {
-        outState.putStringArrayList("selected", new ArrayList<>(selected));
+        outState.putBoolean("enabled_only", enabledOnly);
         outState.putString("query", search.getText().toString());
         outState.putString("pane",activeType.getName());
         if(activeChild!=null)outState.putBundle("pane_state",activeChild.savePaneState());
@@ -89,7 +89,7 @@ public class PickerActivity extends ActivityGroup {
         boolean wide=getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE;
         if(!wide)header.addView(ui.logo(),new LinearLayout.LayoutParams(dp(42),dp(42)));
         LinearLayout names=ui.column();names.setPadding(wide?0:dp(10),0,0,0);if(!wide){TextView brand=ui.note("Raven Gamepad");brand.setPadding(0,0,0,0);names.addView(brand);}
-        TextView title=ui.heading("Apps");paneTitle=title;title.setPadding(0,0,0,0);names.addView(title);header.addView(names,new LinearLayout.LayoutParams(0,-2,1));
+        TextView title=ui.heading(enabledOnly ? "Enabled" : "Apps");paneTitle=title;title.setPadding(0,0,0,0);names.addView(title);header.addView(names,new LinearLayout.LayoutParams(0,-2,1));
         Button more=ui.overflow();more.setOnClickListener(v->showOptions(more));header.addView(more,new LinearLayout.LayoutParams(dp(48),dp(44)));
         LinearLayout content=ui.column();content.setPadding(dp(22),dp(4),dp(22),dp(12));page.addView(content,new LinearLayout.LayoutParams(-1,0,1));
         content.addView(ui.note("Choose which apps receive your virtual controller input."));
@@ -104,6 +104,20 @@ public class PickerActivity extends ActivityGroup {
         if(android.os.Build.VERSION.SDK_INT>=29){android.graphics.drawable.GradientDrawable cursor=ui.shape(ui.accentText,1);cursor.setSize(dp(2),dp(22));search.setTextCursorDrawable(cursor);}
         Drawable searchIcon=getDrawable(android.R.drawable.ic_menu_search).mutate();searchIcon.setTint(secondary);searchIcon.setBounds(0,0,dp(20),dp(20));search.setCompoundDrawables(searchIcon,null,null,null);search.setCompoundDrawablePadding(dp(8));
         controls.addView(search, new LinearLayout.LayoutParams(0, dp(44), 1));
+        systemApps = accentSwitch();
+        systemApps.setText("System apps");
+        systemApps.setTextColor(foreground);
+        systemApps.setTextSize(12);
+        systemApps.setSwitchPadding(dp(6));
+        systemApps.setContentDescription("Show system apps");
+        systemApps.setChecked(getPreferences(MODE_PRIVATE).getBoolean("show_system", false));
+        systemApps.setOnCheckedChangeListener((button, show) -> {
+            getPreferences(MODE_PRIVATE).edit().putBoolean("show_system", show).apply();
+            filterChoices();
+        });
+        LinearLayout.LayoutParams toggleParams = new LinearLayout.LayoutParams(-2, dp(48));
+        toggleParams.setMarginStart(dp(8));
+        controls.addView(systemApps, toggleParams);
         content.addView(controls);
         search.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -129,17 +143,39 @@ public class PickerActivity extends ActivityGroup {
         list.setAdapter(adapter);
         list.setOnItemClickListener((parent, view, position, id) -> {
             String pkg = visible.get(position).pkg;
-            if (!selected.add(pkg)) selected.remove(pkg);
-            adapter.notifyDataSetChanged(); updateStatus();
+            setSelected(pkg, !selected.contains(pkg));
         });
         content.addView(list, new LinearLayout.LayoutParams(-1, 0, 1));
-        saveButton=ui.button("Save selected apps",true);saveButton.setOnClickListener(v -> saveTargets());
-        LinearLayout.LayoutParams saveParams = new LinearLayout.LayoutParams(-1, dp(48));saveParams.setMargins(0,dp(4),0,0);content.addView(saveButton,saveParams);
         appsPage=page;pane=new FrameLayout(this);pane.setTag("raven-right-pane");pane.addView(page,new FrameLayout.LayoutParams(-1,-1));
         LinearLayout right=ui.column();right.addView(header);right.addView(pane,new LinearLayout.LayoutParams(-1,0,1));
         shellRoot=RavenShell.wrap(this,ui,right,0,this::openPane);setContentView(shellRoot);
     }
+    boolean isEnabledOnly() {
+        return enabledOnly;
+    }
+
+    void openApps(boolean onlyEnabled) {
+        if (activeChild != null) {
+            activeChild.navigateAway(() -> showApps(onlyEnabled));
+        } else {
+            showApps(onlyEnabled);
+        }
+    }
+
+    private void showApps(boolean onlyEnabled) {
+        enabledOnly = onlyEnabled;
+        if (activeType != PickerActivity.class) swapPane(PickerActivity.class);
+        paneTitle.setText(enabledOnly ? "Enabled" : "Apps");
+        filterChoices();
+        list.setSelection(0);
+        RavenShell.select(shellRoot, ui, PickerActivity.class);
+    }
+
     void openPane(Class<?> type){
+        if (type == PickerActivity.class) {
+            openApps(false);
+            return;
+        }
         if(activeType==type)return;
         if(activeChild!=null)activeChild.navigateAway(()->swapPane(type));else swapPane(type);
     }
@@ -147,7 +183,7 @@ public class PickerActivity extends ActivityGroup {
         ((android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE)).hideSoftInputFromWindow(search.getWindowToken(),0);
         pane.removeAllViews();if(activeChild!=null)getLocalActivityManager().destroyActivity(activeType.getName(),true);
         activeChild=null;activeType=type;
-        if(type==PickerActivity.class){pane.addView(appsPage,new FrameLayout.LayoutParams(-1,-1));paneTitle.setText("Apps");filterChoices();}
+        if(type==PickerActivity.class){pane.addView(appsPage,new FrameLayout.LayoutParams(-1,-1));paneTitle.setText(enabledOnly ? "Enabled" : "Apps");filterChoices();}
         else{
             Intent intent=new Intent(this,type);if(pendingPaneState!=null){intent.putExtra("pane_state",pendingPaneState);pendingPaneState=null;}
             android.view.Window window=getLocalActivityManager().startActivity(type.getName(),intent);
@@ -186,31 +222,37 @@ public class PickerActivity extends ActivityGroup {
         pkg.setSingleLine(true); pkg.setEllipsize(TextUtils.TruncateAt.END);
         labels.addView(pkg);
         row.addView(labels, labelParams);
-        CheckBox check = new CheckBox(this);
-        check.setButtonTintList(new android.content.res.ColorStateList(new int[][]{new int[]{android.R.attr.state_checked},new int[]{}},new int[]{AppearanceColors.readable(accent,ui.surface),secondary}));
-        check.setChecked(selected.contains(choice.pkg));
-        check.setContentDescription("Select " + choice.label);
-        check.setOnClickListener(v -> {
-            if (check.isChecked()) selected.add(choice.pkg); else selected.remove(choice.pkg);
-            adapter.notifyDataSetChanged(); updateStatus();
-        });
-        row.addView(check);
+        Switch toggle = accentSwitch();
+        toggle.setChecked(selected.contains(choice.pkg));
+        toggle.setContentDescription("Enable " + choice.label);
+        toggle.setOnCheckedChangeListener((button, enabled) -> setSelected(choice.pkg, enabled));
+        row.addView(toggle, new LinearLayout.LayoutParams(-2, dp(48)));
         container.setContentDescription(choice.label + ", " + choice.pkg
                 + (selected.contains(choice.pkg) ? ", selected" : ", not selected"));
         return container;
+    }
+
+    private Switch accentSwitch() {
+        Switch toggle = new Switch(this);
+        int[][] states = {{android.R.attr.state_checked}, {}};
+        toggle.setThumbTintList(new android.content.res.ColorStateList(
+                states, new int[]{accent, secondary}));
+        toggle.setTrackTintList(new android.content.res.ColorStateList(
+                states, new int[]{accent, secondary}));
+        return toggle;
     }
 
     private void showOptions(View anchor) {
         PopupMenu popup = new PopupMenu(this, anchor);
         optionsPopup=popup;
         Menu menu = popup.getMenu();
-        MenuItem showSystem=menu.add(0,1,0,"Show system apps");showSystem.setCheckable(true);showSystem.setChecked(getPreferences(MODE_PRIVATE).getBoolean("show_system",false));
         menu.add(0,6,1,"Settings");
         menu.add(0,7,2,"About");
+        menu.add(0,8,3,"Report an issue");
         popup.setOnMenuItemClickListener(item -> {
-            if(item.getItemId()==1){boolean show=!getPreferences(MODE_PRIVATE).getBoolean("show_system",false);getPreferences(MODE_PRIVATE).edit().putBoolean("show_system",show).apply();item.setChecked(show);filterChoices();}
-            else if (item.getItemId()==6)openPane(AppearanceActivity.class);
+            if (item.getItemId()==6)openPane(AppearanceActivity.class);
             else if (item.getItemId()==7)AboutDialog.show(this);
+            else if (item.getItemId()==8)IssueReport.open(this, ui);
             return true;
         });
         popup.show();
@@ -261,9 +303,10 @@ public class PickerActivity extends ActivityGroup {
         if (adapter == null || search == null) return;
         String needle = search.getText().toString().toLowerCase(Locale.ROOT);
         boolean showSystem = getPreferences(MODE_PRIVATE).getBoolean("show_system", false);
+        systemApps.setVisibility(enabledOnly ? View.GONE : View.VISIBLE);
         visible.clear();
         for (Choice c : choices) {
-            if (!showSystem && c.system) continue;
+            if (enabledOnly ? !selected.contains(c.pkg) : !showSystem && c.system) continue;
             if (c.label.toLowerCase(Locale.ROOT).contains(needle)
                     || c.pkg.toLowerCase(Locale.ROOT).contains(needle)) visible.add(c);
         }
@@ -272,26 +315,43 @@ public class PickerActivity extends ActivityGroup {
     private void updateStatus() {
         if (visible.isEmpty() && search.getText().length() > 0) {
             status.setText("No matching apps | " + selected.size() + " selected");
+        } else if (visible.isEmpty() && enabledOnly) {
+            status.setText("No enabled apps | Select apps in the Apps tab");
         } else if (visible.isEmpty()
                 && !getPreferences(MODE_PRIVATE).getBoolean("show_system", false)) {
-            status.setText("No user apps installed | Open options > Show system apps");
+            status.setText("No user apps installed | Turn on System apps");
         } else {
             status.setText(visible.size() + (visible.size()==1?" app shown | ":" apps shown | ") + selected.size() + " selected");
         }
     }
-    private void saveTargets() {
-        List<String> sorted = new ArrayList<>(selected);
+    private void setSelected(String pkg, boolean enabled) {
+        Set<String> updated = new HashSet<>(selected);
+        if (enabled) updated.add(pkg); else updated.remove(pkg);
+        try {
+            writeTargets(updated);
+            selected.clear();
+            selected.addAll(updated);
+        } catch (IOException error) {
+            Toast.makeText(this, "Could not update app selection", Toast.LENGTH_LONG).show();
+        }
+        filterChoices();
+    }
+
+    private void writeTargets(Set<String> targets) throws IOException {
+        List<String> sorted = new ArrayList<>(targets);
         Collections.sort(sorted);
         File target = targetFile();
-        File temporary = new File(target.getParentFile(), TARGETS_FILE + ".tmp");
-        try (FileOutputStream stream = new FileOutputStream(temporary);
-             OutputStreamWriter writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
-            for (String pkg : sorted) if (validPackage(pkg)) writer.write(pkg + "\n");
-            writer.flush(); stream.getFD().sync();
-        } catch (Exception e) { status.setText("Could not save apps: " + e.getMessage()); return; }
-        if (!temporary.renameTo(target)) { status.setText("Could not replace the saved app list."); return; }
-        Toast.makeText(this, sorted.isEmpty() ? "Forwarding is off."
-                : "Saved " + sorted.size() + " apps.", Toast.LENGTH_SHORT).show();
-        updateStatus();
+        File temporary = File.createTempFile(TARGETS_FILE, ".tmp", target.getParentFile());
+        try {
+            try (FileOutputStream stream = new FileOutputStream(temporary);
+                 OutputStreamWriter writer = new OutputStreamWriter(stream, StandardCharsets.UTF_8)) {
+                for (String pkg : sorted) if (validPackage(pkg)) writer.write(pkg + "\n");
+                writer.flush();
+                stream.getFD().sync();
+            }
+            if (!temporary.renameTo(target)) throw new IOException("Could not replace targets file");
+        } finally {
+            if (temporary.exists()) temporary.delete();
+        }
     }
 }
