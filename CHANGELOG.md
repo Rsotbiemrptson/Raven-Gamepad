@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.16.6 - 2026-11-06
+
+- Refresh the APK path while the bridge runs so Odin 3 can resume forwarding after an APK update.
+- Pause forwarding while the APK path or settings are temporarily unavailable.
+- Install the updated bridge components once to enable this behavior for future APK updates.
+
+
 ## 0.16.5 - 2026-11-06
 
 - Save app forwarding changes as soon as you flip a switch. Use Enabled to review and disable selected apps.
