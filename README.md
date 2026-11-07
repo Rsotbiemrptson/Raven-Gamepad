@@ -6,7 +6,7 @@
 
 Virtual DualShock 4 controls for your handheld, with app selection, controller mapping and diagnostics in one APK.
 
-**Current release: 0.16.7** · Package: `com.odin2.ds4bridgehelper` · Version code: `53` · License: **GPL-3.0-only**
+**Current release: 0.17.1** · Package: `com.odin2.ds4bridgehelper` · Version code: `54` · License: **GPL-3.0-only**
 
 Previously named DS4 Bridge; the package and signing identity remain unchanged, so the official APK can update an existing installation.
 
@@ -55,7 +55,7 @@ The app uses Java and Android framework APIs plus a small native C bridge, witho
 - GitHub Releases contains the signed APK, source archive and SHA-256 checksums.
 - `docs/`: install, removal, usage, build, architecture and validation notes.
 
-See [Architecture](docs/ARCHITECTURE.md) and [Release status](RELEASE-STATUS.md). Source corresponding to the official APK is available at the `v0.16.7` tag.
+See [Architecture](docs/ARCHITECTURE.md) and [Release status](RELEASE-STATUS.md). Source corresponding to the official APK is available at the `v0.17.1` tag.
 
 ## License and contributions
 

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.17.1 - 2026-11-06
+
+- Renumber the stable release to v0.17.1 (build 54).
+- Verify Remote Play controls on Odin 3 after an in-place update.
+
 ## 0.16.7 - 2026-11-06
 
 - Match the shared Raven About layout, including the adaptive width and centered 72 dp icon.

@@ -2,7 +2,7 @@
 
 ## Fresh installation on a supported Odin 2 or Odin 3
 
-1. Download the official `Raven-Gamepad-0.16.7.apk` from [Releases](https://github.com/Rsotbiemrptson/Raven-Gamepad/releases/tag/v0.16.7).
+1. Download the official `Raven-Gamepad-0.17.1.apk` from [Releases](https://github.com/Rsotbiemrptson/Raven-Gamepad/releases/tag/v0.17.1).
 2. Open the APK and allow installation from that source when Android asks.
 3. Open Raven Gamepad. Use the top-right three-dot menu to open **Settings**.
 4. Select **Bridge controls**, expand **Advanced**, then tap **Install/Update Components**. Wait for the installation to finish.
