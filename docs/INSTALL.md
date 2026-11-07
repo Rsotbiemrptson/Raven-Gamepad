@@ -2,7 +2,7 @@
 
 ## Fresh installation on a supported Odin 2 or Odin 3
 
-1. Download the official `Raven-Gamepad-0.17.1.apk` from [Releases](https://github.com/Rsotbiemrptson/Raven-Gamepad/releases/tag/v0.17.1).
+1. Download the official `Raven-Gamepad-0.17.2.apk` from [Releases](https://github.com/Rsotbiemrptson/Raven-Gamepad/releases/tag/v0.17.2).
 2. Open the APK and allow installation from that source when Android asks.
 3. Open Raven Gamepad. Use the top-right three-dot menu to open **Settings**.
 4. Select **Bridge controls**, expand **Advanced**, then tap **Install/Update Components**. Wait for the installation to finish.
@@ -28,3 +28,5 @@ Community builds signed with another key cannot update the official app in place
 The component controls manage this standalone app's runtime. They do not remove an older firmware-baked bridge or another script installation. Do not run two bridges simultaneously. Firmware bridge detection disables standalone controls; migrate that integration separately before proceeding.
 
 On Odin 3, v0.16.6 components refresh the APK path while the bridge runs. Install the updated components once. Subsequent APK-only updates can pick up the new path without a bridge restart or reboot.
+
+**Odin 3 upgrade to v0.17.2:** Use Settings > Bridge controls > Advanced > **Install/Update Components**, then Start to enable on-demand controller registration.

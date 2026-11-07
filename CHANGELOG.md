@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.17.2 - 2026-11-07
+
+- Register the virtual controller on Odin 3 only while forwarding, so games outside the enabled list can use the built-in controller.
+- Verified Dead Cells, Super Meat Boy, Remote Play and automatic startup after reboot on Odin 3.
+- Update bridge components once on Odin 3 to apply this change.
+
+
 ## 0.17.1 - 2026-11-06
 
 - Renumber the stable release to v0.17.1 (build 54).

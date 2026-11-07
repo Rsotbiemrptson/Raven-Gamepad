@@ -480,12 +480,15 @@ int main(int argc, char **argv) {
     }
     bool forward = false;
     bool managed = false;
+    bool on_demand = false;
     int seconds = 45;
     for (int i = 1; i < argc; ++i) {
         if (strcmp(argv[i], "--forward") == 0) {
             forward = true;
         } else if (strcmp(argv[i], "--managed") == 0) {
             managed = true;
+        } else if (strcmp(argv[i], "--on-demand") == 0) {
+            on_demand = true;
         } else if (strcmp(argv[i], "--seconds") == 0 && i + 1 < argc) {
             seconds = atoi(argv[++i]);
         } else if (strcmp(argv[i], "--inspect") == 0) {
@@ -494,9 +497,13 @@ int main(int argc, char **argv) {
         } else if (strcmp(argv[i], "--profile") == 0 && i + 1 < argc) {
             if (load_profile(argv[++i]) < 0) return 2;
         } else {
-            fprintf(stderr, "Usage: %s [--forward | --managed] [--seconds 0..300] [--profile file]; or --inspect / --check-hooks / --capture-axis VID PID\n", argv[0]);
+            fprintf(stderr, "Usage: %s [--forward | --managed [--on-demand]] [--seconds 0..300] [--profile file]; or --inspect / --check-hooks / --capture-axis VID PID\n", argv[0]);
             return 2;
         }
+    }
+    if (on_demand && !managed) {
+        fprintf(stderr, "--on-demand requires --managed\n");
+        return 2;
     }
     if (forward && managed) {
         fprintf(stderr, "Choose either --forward or --managed, not both\n");
@@ -519,12 +526,13 @@ int main(int argc, char **argv) {
     if (forward || managed) {
         source = open_odin(source_path, sizeof(source_path), &source_product);
     }
-    int virtual_pad = create_ds4();
-    if (virtual_pad < 0) {
+    int virtual_pad = on_demand ? -1 : create_ds4();
+    if (!on_demand && virtual_pad < 0) {
         if (source >= 0) close(source);
         return 1;
     }
-    fprintf(stderr, "Virtual DualShock 4 054c:09cc created; %s%s; duration %d seconds (0 = until stopped)\n",
+    if (on_demand) fprintf(stderr, "Waiting for a selected app before creating the virtual controller\n");
+    else fprintf(stderr, "Virtual DualShock 4 054c:09cc created; %s%s; duration %d seconds (0 = until stopped)\n",
             managed ? "managed idle, source " : forward ? "forwarding " : "identity only",
             (forward || managed) ? source_path : "", seconds);
     fflush(stderr);
@@ -539,18 +547,26 @@ int main(int argc, char **argv) {
             forwarding_request = -1;
             if (request == 1) {
                 forwarding_lease_until = now_seconds() + 4.0;
-                if (!forwarding_active) {
+            } else if (request == 0) {
+                forwarding_lease_until = 0;
+            }
+            if (!forwarding_active && now_seconds() < forwarding_lease_until) {
+                if (on_demand) virtual_pad = create_ds4();
+                if (virtual_pad >= 0) {
                     if (source >= 0) {
                         snapshot_odin_state(source, virtual_pad, source_product, dpad);
                     }
                     forwarding_active = true;
                     fprintf(stderr, "Forwarding enabled\n");
                 }
-            } else if (request == 0) {
-                forwarding_lease_until = 0;
             }
             if (forwarding_active && now_seconds() >= forwarding_lease_until) {
                 neutralize_virtual(virtual_pad, dpad);
+                if (on_demand) {
+                    ioctl(virtual_pad, UI_DEV_DESTROY);
+                    close(virtual_pad);
+                    virtual_pad = -1;
+                }
                 forwarding_active = false;
                 fprintf(stderr, "Forwarding disabled\n");
             }
@@ -596,8 +612,10 @@ int main(int argc, char **argv) {
         }
     }
 
-    ioctl(virtual_pad, UI_DEV_DESTROY);
-    close(virtual_pad);
+    if (virtual_pad >= 0) {
+        ioctl(virtual_pad, UI_DEV_DESTROY);
+        close(virtual_pad);
+    }
     if (source >= 0) close(source);
     fprintf(stderr, "Virtual controller removed\n");
     return 0;

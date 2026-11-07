@@ -6,7 +6,7 @@
 
 Virtual DualShock 4 controls for your handheld, with app selection, controller mapping and diagnostics in one APK.
 
-**Current release: 0.17.1** · Package: `com.odin2.ds4bridgehelper` · Version code: `54` · License: **GPL-3.0-only**
+**Current release: 0.17.2** · Package: `com.odin2.ds4bridgehelper` · Version code: `56` · License: **GPL-3.0-only**
 
 Previously named DS4 Bridge; the package and signing identity remain unchanged, so the official APK can update an existing installation.
 
@@ -41,7 +41,7 @@ The bridge does not change firmware, device fingerprints or Play Integrity, and 
 - [Complete removal](docs/UNINSTALL.md) — remove bridge components **before** uninstalling the APK.
 - [Testing and hardware limits](docs/TESTING.md)
 
-Automatic startup waits for the first unlock after reboot. App selection gates input forwarding; the virtual controller stays registered while the bridge is running. Battery impact has not been quantified.
+Automatic startup waits for the first unlock after reboot. On Odin 3 the virtual controller registers only while forwarding. On Odin 2 it stays registered while the bridge runs. Battery impact has not been quantified.
 
 ## Build and verification
 
@@ -55,7 +55,7 @@ The app uses Java and Android framework APIs plus a small native C bridge, witho
 - GitHub Releases contains the signed APK, source archive and SHA-256 checksums.
 - `docs/`: install, removal, usage, build, architecture and validation notes.
 
-See [Architecture](docs/ARCHITECTURE.md) and [Release status](RELEASE-STATUS.md). Source corresponding to the official APK is available at the `v0.17.1` tag.
+See [Architecture](docs/ARCHITECTURE.md) and [Release status](RELEASE-STATUS.md). Source corresponding to the official APK is available at the `v0.17.2` tag.
 
 ## License and contributions
 

@@ -16,7 +16,7 @@ The main card shows the actual state as **Status: ...**, Start/Stop/Restart and 
 
 Advanced starts collapsed. Expand it for Install/Update Components, Refresh bridge status, View technical status, Test virtual gamepad and Uninstall Bridge Components. Each action has an explanation. Scroll for lower rows when needed. Testing the virtual gamepad sends a short input; avoid doing that during an important game action.
 
-By default, app selection controls forwarding. The virtual Sony controller remains registered while the bridge runs, even outside selected apps. The supervisor still checks mode approximately once per second. In selected-app mode it also queries foreground/selection state; all-app and paused modes skip those queries. This is not an accessibility watcher, and battery impact has not been measured.
+By default, app selection controls forwarding. On Odin 3 the virtual controller registers only while forwarding. On Odin 2 it stays registered while the bridge runs. The supervisor still checks mode approximately once per second. In selected-app mode it also queries foreground/selection state; all-app and paused modes skip those queries. This is not an accessibility watcher, and battery impact has not been measured.
 
 ## Quick Settings controller style
 

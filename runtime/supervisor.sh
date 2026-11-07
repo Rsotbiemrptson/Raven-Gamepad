@@ -31,16 +31,21 @@ am broadcast -n "$HELPER/.ExclusionReceiver" --es action add >/dev/null 2>&1
 sleep 1
 refresh_apk_path || exit 1
 read_setting profile >"$STATE/profile.conf" 2>/dev/null
-if [ -s "$STATE/profile.conf" ]; then
-    "$STATE/odin_ds4_bridge" --profile "$STATE/profile.conf" --managed --seconds 0 &
-else
-    "$STATE/odin_ds4_bridge" --managed --seconds 0 &
+set -- --managed --seconds 0
+if [ "$(getprop ro.product.vendor.model)" = Odin3 ]; then
+    set -- "$@" --on-demand
 fi
+if [ -s "$STATE/profile.conf" ]; then
+    set -- "$@" --profile "$STATE/profile.conf"
+fi
+"$STATE/odin_ds4_bridge" "$@" &
 BRIDGE_PID=$!
 echo "$BRIDGE_PID" >"$STATE/bridge.pid"
 sleep 2
 kill -0 "$BRIDGE_PID" 2>/dev/null || exit 1
-dumpsys input 2>/dev/null | grep -q 'vendor=0x054c, product=0x09cc' || exit 1
+if [ "$(getprop ro.product.vendor.model)" != Odin3 ]; then
+    dumpsys input 2>/dev/null | grep -q 'vendor=0x054c, product=0x09cc' || exit 1
+fi
 missing_apk_checks=0
 while kill -0 "$BRIDGE_PID" 2>/dev/null; do
     # Android can move base.apk when the app is updated in place.
